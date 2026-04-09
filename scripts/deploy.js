@@ -1,127 +1,125 @@
-// scripts/deployFixedVault.js - FINAL WORKING VERSION
+// scripts/deploy.js - AUTO NONCE VERSION
 const { ethers } = require("hardhat");
 
-// ✅ Base Sepolia Addresses (lowercase)
 const BASE_SEPOLIA = {
-  AAVE_POOL: "0xa238dd80c259a72e81d7e4664a9801593f98d1c5",
-  USDC: "0xba50cd2a20f6da35d788639e581bca8d0b5d4d5f",
+  AAVE_POOL: "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5",
+  USDC: "0xba50Cd2A20f6DA35D788639E581bca8d0B5d4D5f",
   A_USDC: "0x0a1d576f3efef75b330424287a95a366e8281d54",
 };
 
 async function main() {
   const [deployer] = await ethers.getSigners();
   
-  // ✅ Get current nonce and reset if needed
+  // Get current nonce automatically
   let nonce = await deployer.getNonce();
-  console.log("Current nonce:", nonce);
   
   console.log("\n============================================");
-  console.log("  Sentient Shield Vault — Deploying...");
+  console.log("  🚀 Sentient Shield Vault Deployment");
   console.log("  Network: Base Sepolia (84532)");
   console.log("============================================");
-  console.log("Deployer :", deployer.address);
+  console.log("📡 Deployer:", deployer.address);
+  console.log("🔢 Starting Nonce:", nonce);
+  
   const balance = await ethers.provider.getBalance(deployer.address);
-  console.log("Balance  :", ethers.formatEther(balance), "ETH\n");
+  console.log("💰 Balance:", ethers.formatEther(balance), "ETH\n");
 
-  // ✅ Gas settings
-  const gasPrice = ethers.parseUnits("1.5", "gwei"); // 1.5 Gwei
+  const gasPrice = ethers.parseUnits("1.5", "gwei");
   const gasLimit = 3000000;
 
-  console.log("Gas Price:", ethers.formatUnits(gasPrice, "gwei"), "Gwei");
-  console.log("Starting nonce:", nonce);
-
   // 1. Deploy MockNexaID
-  console.log("\n1️⃣  Deploying MockNexaID...");
+  console.log("1️⃣ Deploying MockNexaID...");
   const NexaID = await ethers.getContractFactory("MockNexaID");
-  const nexa = await NexaID.deploy({
-    nonce: nonce++,
-    gasPrice: gasPrice,
-    gasLimit: gasLimit,
-  });
+  const nexa = await NexaID.deploy({ gasPrice, gasLimit, nonce: nonce++ });
   await nexa.waitForDeployment();
-  const nexaAddr = await nexa.getAddress();
-  console.log("   ✅ NexaID:", nexaAddr);
+  const nexaAddress = await nexa.getAddress();
+  console.log("   ✅", nexaAddress);
+  console.log("   Nonce used:", nonce - 1);
 
   // 2. Deploy MockPair
-  console.log("\n2️⃣  Deploying MockPair...");
+  console.log("\n2️⃣ Deploying MockPair...");
   const Pair = await ethers.getContractFactory("MockPair");
-  const pair = await Pair.deploy(BASE_SEPOLIA.USDC, {
-    nonce: nonce++,
-    gasPrice: gasPrice,
-    gasLimit: gasLimit,
-  });
+  const pair = await Pair.deploy(BASE_SEPOLIA.USDC, { gasPrice, gasLimit, nonce: nonce++ });
   await pair.waitForDeployment();
-  const pairAddr = await pair.getAddress();
-  console.log("   ✅ MockPair:", pairAddr);
-
+  const pairAddress = await pair.getAddress();
+  console.log("   ✅", pairAddress);
+  console.log("   Nonce used:", nonce - 1);
+  
   // Set reserves
-  const setReservesTx = await pair.setReserves(2_500_000_000n, 1_000_000_000_000_000_000n, {
-    nonce: nonce++,
-    gasPrice: gasPrice,
-    gasLimit: gasLimit,
+  const reserve0 = ethers.parseUnits("2500", 6);
+  const reserve1 = ethers.parseUnits("1", 18);
+  const setReservesTx = await pair.setReserves(reserve0, reserve1, { 
+    gasPrice, 
+    gasLimit: gasLimit, 
+    nonce: nonce++ 
   });
   await setReservesTx.wait();
-  console.log("   ✅ Reserves set");
+  console.log("   ✅ Reserves set (nonce:", nonce - 1, ")");
 
-  // 3. Deploy Vault — 5 constructor params
-  console.log("\n3️⃣  Deploying Vault...");
+  // 3. Deploy Vault
+  console.log("\n3️⃣ Deploying Vault (Fixed Version)...");
   const Vault = await ethers.getContractFactory("Vault");
   const vault = await Vault.deploy(
-    BASE_SEPOLIA.USDC,       // _usdc
-    nexaAddr,                // _nexaid
-    pairAddr,                // _pair
-    BASE_SEPOLIA.AAVE_POOL,  // _aavePool
-    BASE_SEPOLIA.A_USDC,     // _aUsdc
-    {
-      nonce: nonce++,
-      gasPrice: gasPrice,
-      gasLimit: 5000000, // Higher gas for vault
-    }
+    BASE_SEPOLIA.USDC,
+    nexaAddress,
+    pairAddress,
+    BASE_SEPOLIA.AAVE_POOL,
+    BASE_SEPOLIA.A_USDC,
+    { gasPrice, gasLimit: 5000000, nonce: nonce++ }
   );
   await vault.waitForDeployment();
-  const vaultAddr = await vault.getAddress();
-  console.log("   ✅ Vault:", vaultAddr);
+  const vaultAddress = await vault.getAddress();
+  console.log("   ✅ Vault deployed at:", vaultAddress);
+  console.log("   Nonce used:", nonce - 1);
 
-  // 4. Verify deployer in NexaID
-  console.log("\n4️⃣  Verifying deployer...");
-  const setUserTx = await nexa.setUser(deployer.address, true, 850, {
-    nonce: nonce++,
-    gasPrice: gasPrice,
-    gasLimit: gasLimit,
+  // 4. Setup: Verify deployer
+  console.log("\n4️⃣ Setting up NexaID...");
+  const setUserTx = await nexa.setUser(deployer.address, true, 850, { 
+    gasPrice, 
+    gasLimit, 
+    nonce: nonce++ 
   });
   await setUserTx.wait();
-  console.log("   ✅ Deployer verified (score 850)");
+  console.log("   ✅ Deployer verified (nonce:", nonce - 1, ")");
 
   // 5. Enable AAVE
-  console.log("\n5️⃣  Enabling AAVE...");
-  const enableTx = await vault.setAaveEnabled(true, {
-    nonce: nonce++,
-    gasPrice: gasPrice,
-    gasLimit: gasLimit,
+  console.log("\n5️⃣ Enabling AAVE integration...");
+  const enableTx = await vault.setAaveEnabled(true, { 
+    gasPrice, 
+    gasLimit, 
+    nonce: nonce++ 
   });
   await enableTx.wait();
-  console.log("   ✅ AAVE enabled!");
+  console.log("   ✅ AAVE real yield ENABLED! (nonce:", nonce - 1, ")");
 
-  // 6. Summary
+  // Final summary
   console.log("\n============================================");
-  console.log("  DEPLOYMENT SUMMARY — Base Sepolia");
+  console.log("  ✅ DEPLOYMENT COMPLETE!");
   console.log("============================================");
-  console.log("NexaID   :", nexaAddr);
-  console.log("MockPair :", pairAddr);
-  console.log("Vault    :", vaultAddr);
-  console.log("AAVE Pool:", BASE_SEPOLIA.AAVE_POOL);
-  console.log("USDC     :", BASE_SEPOLIA.USDC);
-  console.log("aUSDC    :", BASE_SEPOLIA.A_USDC);
+  console.log("📦 Contract Addresses:");
+  console.log(`   MockNexaID: ${nexaAddress}`);
+  console.log(`   MockPair  : ${pairAddress}`);
+  console.log(`   Vault     : ${vaultAddress}`);
+  console.log("\n🔧 Configuration:");
+  console.log(`   USDC      : ${BASE_SEPOLIA.USDC}`);
+  console.log(`   AAVE Pool : ${BASE_SEPOLIA.AAVE_POOL}`);
+  console.log(`   aUSDC     : ${BASE_SEPOLIA.A_USDC}`);
+  
+  console.log("\n📝 Update your App.jsx with these addresses:");
   console.log("============================================");
-  console.log("\n📝 App.jsx mein update karo:");
   console.log(`const usdcAddress   = "${BASE_SEPOLIA.USDC}";`);
-  console.log(`const nexaidAddress = "${nexaAddr}";`);
-  console.log(`const pairAddress   = "${pairAddr}";`);
-  console.log(`const vaultAddress  = "${vaultAddr}";`);
-  console.log("\n✅ Deployment complete!\n");
+  console.log(`const nexaidAddress = "${nexaAddress}";`);
+  console.log(`const pairAddress   = "${pairAddress}";`);
+  console.log(`const vaultAddress  = "${vaultAddress}";`);
+  console.log("============================================\n");
 }
 
-main().catch((err) => {
-  console.error("❌ Deployment failed:", err);
-  process.exit(1);
+main().catch((error) => {
+  console.error("\n❌ Deployment failed!");
+  console.error("Error:", error.message);
+  if (error.message.includes("nonce")) {
+    console.log("\n💡 Tip: Run this command to reset nonce:");
+    console.log("   npx hardhat console --network baseSepolia");
+    console.log("   Then: await (await ethers.provider.send('eth_getTransactionCount', ['YOUR_ADDRESS', 'pending']))");
+  }
+  process.exitCode = 1;
 });

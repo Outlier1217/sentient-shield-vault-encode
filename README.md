@@ -142,9 +142,9 @@ VaultBase.sol     ← storage, events, modifiers, XP logic, AAVE internal functi
 
 | Contract | Address |
 |---|---|
-| 🔐 MockNexaID | `0xdD62fC9c75aE7DDE486635d4C3dFB5ECd72c80C5` |
-| 🔗 MockPair | `0xe9cEF1A7788657171592e64da274EB9D021a96f8` |
-| 🏦 Vault | `0x63092E7BDd4D1a425BdB6264035dD3F6b775BB4d` |
+| 🔐 MockNexaID | `0x1e67340A585f99405a14261656337365bb39869B` |
+| 🔗 MockPair | `0x9d628543BF5dC2a656b06d54aCA7cff9529967E8` |
+| 🏦 Vault | `0xeFE3707183961AB72DEe353EeDE76BA252B55C8B` |
 | 🌐 AAVE V3 Pool | `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5` |
 | 💰 USDC (testnet) | `0xba50cd2a20f6da35d788639e581bca8d0b5d4d5f` |
 | 📈 aUSDC (yield) | `0x0a1d576f3efef75b330424287a95a366e8281d54` |
@@ -240,8 +240,8 @@ Built with **React + Vite + Ethers.js v6**.
 ## 🛠️ Setup & Run
 
 ```bash
-git clone https://github.com/Outlier1217/sentient-shield-vault
-cd sentient-shield-vault
+git clone https://github.com/Outlier1217/sentient-shield-vault-encode
+cd sentient-shield-vault-encode
 npm install
 cd frontend && npm install
 ```
@@ -251,6 +251,7 @@ cd frontend && npm install
 PRIVATE_KEY=your_private_key_here
 ALCHEMY_KEY=your_alchemy_key_here
 VAULT_ADDRESS=  # fill after deploy
+ETHERSCAN_API_KEY
 ```
 
 **Compile & Deploy:**
@@ -314,9 +315,9 @@ cd frontend && npm run dev
 
 | Resource | Link |
 |---|---|
-| 📦 GitHub | [github.com/Outlier1217/sentient-shield-vault](https://github.com/Outlier1217/sentient-shield-vault) |
-| 📺 Demo Video | [youtu.be/VxmpqMxuk7E](https://youtu.be/VxmpqMxuk7E) |
-| 🌐 Live Prototype | [mprot.store](https://mprot.store/) |
+| 📦 GitHub | [github.com/Outlier1217/sentient-shield-vault-encode](https://github.com/Outlier1217/sentient-shield-vault-encode) |
+| 📺 Demo Video | [youtu.be/NmfAgpaR25Y?si=UjZw19jWV5b6v9jQ](https://youtu.be/NmfAgpaR25Y?si=UjZw19jWV5b6v9jQ) |
+| 🌐 Live Prototype | [sentient-shield-vault-encode.vercel.app](https://sentient-shield-vault-encode.vercel.app) |
 
 ---
 

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-const VAULT_ADDRESS = "0x63092E7BDd4D1a425BdB6264035dD3F6b775BB4d";
+const VAULT_ADDRESS = "0xeFE3707183961AB72DEe353EeDE76BA252B55C8B";
 const OWNER_ADDRESS = "0xAb06a17af1425F499E302B639c69f8ce29a967E0";
 
 const vaultAbi = [

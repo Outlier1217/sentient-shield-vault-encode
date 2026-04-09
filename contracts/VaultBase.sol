@@ -190,11 +190,15 @@ abstract contract VaultBase {
      */
     function _supplyToAave(uint amount) internal {
         if (!aaveEnabled || amount == 0 || aavePool == address(0)) return;
-        // Vault ka actual USDC token approve karo AAVE pool ke liye
-        usdc.approve(aavePool, 0);        // reset pehle (safe approval pattern)
-        usdc.approve(aavePool, amount);   // phir actual amount
-        // AAVE ko supply karo — vault ko aUSDC milta hai jo auto-badhta hai
+        
+        // Double approval pattern for safety
+        usdc.approve(aavePool, 0);
+        usdc.approve(aavePool, amount);
+        
+        // Supply to AAVE
         IAavePool(aavePool).supply(address(usdc), amount, address(this), 0);
+        
+        emit AaveYieldCollected(0); // Just to log that supply happened
     }
 
     /**

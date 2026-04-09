@@ -5,14 +5,14 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import AdminPanel from "./AdminPanel";
 
 // ✅ BASE SEPOLIA DEPLOYED ADDRESSES (from your deployment)
-const usdcAddress   = "0xba50cd2a20f6da35d788639e581bca8d0b5d4d5f";  // AAVE USDC (Sepolia)
-const nexaidAddress = "0xdD62fC9c75aE7DDE486635d4C3dFB5ECd72c80C5"; // MockNexaID
-const pairAddress   = "0xe9cEF1A7788657171592e64da274EB9D021a96f8"; // MockPair
-const vaultAddress  = "0x63092E7BDd4D1a425BdB6264035dD3F6b775BB4d"; // Vault
+const usdcAddress   = "0xba50Cd2A20f6DA35D788639E581bca8d0B5d4D5f";  // USDC (AAVE testnet)
+const nexaidAddress = "0x1e67340A585f99405a14261656337365bb39869B"; // MockNexaID (NEW)
+const pairAddress   = "0x9d628543BF5dC2a656b06d54aCA7cff9529967E8"; // MockPair (NEW)
+const vaultAddress  = "0xeFE3707183961AB72DEe353EeDE76BA252B55C8B"; // Vault (NEW)
 
-// AAVE Sepolia Addresses
+// AAVE Sepolia Addresses (Same - verified working)
 const AAVE_POOL     = "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5";  // AAVE V3 Pool
-const AAVE_USDC     = "0xba50cd2a20f6da35d788639e581bca8d0b5d4d5f";  // USDC
+const AAVE_USDC     = "0xba50Cd2A20f6DA35D788639E581bca8d0B5d4D5f";  // USDC
 const A_USDC        = "0x0a1d576f3efef75b330424287a95a366e8281d54";  // aUSDC (yield bearing)
 
 // ─── ABIs ───────────────────────────────────────────────────────────────

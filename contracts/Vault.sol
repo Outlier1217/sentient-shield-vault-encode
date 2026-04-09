@@ -96,22 +96,26 @@ contract Vault is VaultOracle {
     function deposit(uint amount) external nonReentrant notPaused onlyVerified {
         require(amount > 0, "Invalid amount");
 
-        // ✅ transferFrom se pehle balance check (sufficient approval verify)
+        // Step 1: User se USDC lelo
         require(
             usdc.transferFrom(msg.sender, address(this), amount),
             "Transfer failed"
         );
 
+        // Step 2: Vault ke records update karo
         balances[msg.sender] += amount;
         totalDeposits        += amount;
 
-        // AAVE mein supply karo real yield ke liye (agar enabled hai)
-        if (aaveEnabled) {
-            _supplyToAave(amount);
-        }
-
+        // Step 3: Allocation karo (ye sirf accounting hai)
         _allocate(amount);
         _addXP(msg.sender, 10);
+
+        // Step 4: AAVE supply LAST mein karo - isse withdraw ke time tak aUSDC accumulate hoga
+        // NOTE: AAVE supply ke baad vault ka USDC balance kam ho jayega, 
+        // but totalDeposits variable still tracks user ka principal correctly
+        if (aaveEnabled && aavePool != address(0)) {
+            _supplyToAave(amount);
+        }
 
         emit Deposited(msg.sender, amount);
     }
@@ -123,16 +127,20 @@ contract Vault is VaultOracle {
     function withdraw(uint amount) external nonReentrant notPaused onlyVerified {
         require(balances[msg.sender] >= amount, "Insufficient balance");
 
-        // ✅ AAVE se withdraw pehle — phir vault ke paas USDC hoga transfer ke liye
-        if (aaveEnabled) {
-            _withdrawFromAave(amount);
+        // Step 1: AAVE se USDC wapas lao (agar enabled hai)
+        if (aaveEnabled && aavePool != address(0)) {
+            uint withdrawn = _withdrawFromAave(amount);
+            require(withdrawn >= amount, "AAVE withdraw failed");
         }
 
+        // Step 2: Check actual vault USDC balance
         require(usdc.balanceOf(address(this)) >= amount, "Vault liquidity low");
 
+        // Step 3: User records update karo
         balances[msg.sender] -= amount;
         totalDeposits        -= amount;
 
+        // Step 4: User ko USDC transfer karo
         require(usdc.transfer(msg.sender, amount), "Transfer failed");
 
         _addXP(msg.sender, 5);
@@ -160,6 +168,7 @@ contract Vault is VaultOracle {
         uint collected = _collectAaveYield();
         require(collected > 0, "No yield available from AAVE");
         _addXP(msg.sender, 15);
+        emit YieldGenerated(collected); // Add this event
     }
 
     function harvest() external nonReentrant notPaused {
