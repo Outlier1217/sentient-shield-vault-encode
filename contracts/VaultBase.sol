@@ -186,7 +186,7 @@ abstract contract VaultBase {
     /**
      * ✅ FIX 2: `usdc` (vault ka actual token) approve karo
      *    AAVE_USDC hardcoded constant NAHI — woh galat address ho sakta tha
-     *    Double approval pattern: pehle 0 pe reset, phir actual amount
+     *    Double approval pattern: pehle 0 pe reset, phir actual amount.
      */
     function _supplyToAave(uint amount) internal {
         if (!aaveEnabled || amount == 0 || aavePool == address(0)) return;
