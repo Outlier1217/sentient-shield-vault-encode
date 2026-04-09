@@ -13,7 +13,7 @@ module.exports = {
         enabled: true,
         runs: 200,
       },
-      viaIR: true,  // Helps with large contracts
+      viaIR: true,  // Helps with large contracts.
     },
   },
 

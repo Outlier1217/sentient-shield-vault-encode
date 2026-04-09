@@ -10,7 +10,7 @@ const BASE_SEPOLIA = {
 async function main() {
   const [deployer] = await ethers.getSigners();
   
-  // Get current nonce automatically
+  // Get current nonce automatically.
   let nonce = await deployer.getNonce();
   
   console.log("\n============================================");
