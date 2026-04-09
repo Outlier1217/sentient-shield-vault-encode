@@ -15,7 +15,7 @@ SSV integrates **AAVE V3** for real, verifiable yield, an **on-chain identity la
 
 Every piece is live. Every function is callable. Real yield is flowing through AAVE on Base Sepolia right now.
 
----
+----
 
 ## ❗ Problem
 
