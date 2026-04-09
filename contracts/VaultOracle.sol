@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 // ─────────────────────────────────────────────
-//  FILE 2 — VaultOracle.sol
+//   FILE 2 — VaultOracle.sol
 // ─────────────────────────────────────────────
 
 import "./VaultBase.sol";
