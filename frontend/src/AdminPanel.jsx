@@ -1,4 +1,4 @@
-// AdminPanel.jsx - Admin Controls for AAVE & Vault Management
+// AdminPanel.jsx - Admin Controls for AAVE & Vault Management.
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 

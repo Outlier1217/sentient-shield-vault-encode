@@ -12,7 +12,7 @@ const vaultAddress  = "0xeFE3707183961AB72DEe353EeDE76BA252B55C8B"; // Vault (NE
 
 // AAVE Sepolia Addresses (Same - verified working)
 const AAVE_POOL     = "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5";  // AAVE V3 Pool
-const AAVE_USDC     = "0xba50Cd2A20f6DA35D788639E581bca8d0B5d4D5f";  // USDC
+const AAVE_USDC     = "0xba50Cd2A20f6DA35D788639E581bca8d0B5d4D5f";  // USDC.
 const A_USDC        = "0x0a1d576f3efef75b330424287a95a366e8281d54";  // aUSDC (yield bearing)
 
 // ─── ABIs ───────────────────────────────────────────────────────────────
